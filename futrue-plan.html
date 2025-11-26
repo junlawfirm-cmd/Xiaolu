@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NIW Future Plan Questionnaire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f7f7f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 32px 28px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.25rem;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin-top: 1.8rem;
+      margin-bottom: 0.4rem;
+    }
+    p {
+      line-height: 1.6;
+      font-size: 0.95rem;
+      color: #444;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin: 1rem 0 0.35rem;
+      font-size: 0.95rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #d0d0dd;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 80px;
+    }
+    input[type="text"],
+    input[type="email"] {
+      min-height: 0;
+    }
+    textarea:focus,
+    input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+    }
+    .hint {
+      font-size: 0.82rem;
+      color: #777;
+      margin-top: 0.15rem;
+    }
+    .btn-row {
+      margin-top: 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    button {
+      border: none;
+      cursor: pointer;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .note {
+      margin-top: 1.2rem;
+      font-size: 0.85rem;
+      color: #555;
+    }
+    .generated {
+      margin-top: 1.5rem;
+      padding: 12px;
+      border-radius: 6px;
+      background: #f3f4f6;
+      font-family: "Courier New", monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>NIW Future Plan Questionnaire</h1>
+    <p>
+      Dear Client,<br />
+      Please provide short and clear answers to the questions below. This
+      information will be used to prepare the “future plan” section of your
+      NIW petition.
+    </p>
+
+    <!-- Basic Info -->
+    <h2>Your Basic Information</h2>
+    <label for="clientName">Full Name</label>
+    <input type="text" id="clientName" placeholder="Your full name" />
+
+    <label for="clientEmail">Email (optional)</label>
+    <input type="email" id="clientEmail" placeholder="Your email address" />
+
+    <!-- Question 1 -->
+    <h2>1. Problems You Want to Solve in the U.S.</h2>
+    <label for="q1">
+      What specific problems do you hope to solve in the U.S. using your
+      expertise?
+    </label>
+    <textarea
+      id="q1"
+      placeholder="For example: improving the accuracy of recommendation systems, developing fraud-detection models, optimizing demand forecasting, enhancing policy analysis, etc."
+    ></textarea>
+    <div class="hint">
+      You can list several items in bullet or numbered form if that is easier.
+    </div>
+
+    <!-- Question 2 -->
+    <h2>2. Methods and Techniques You Will Use</h2>
+    <label for="q2">
+      What technical methods or analytical approaches do you plan to use to
+      address these problems?
+    </label>
+    <textarea
+      id="q2"
+      placeholder="For example: causal inference, time-series forecasting, deep learning, reinforcement learning, econometric modeling, etc."
+    ></textarea>
+    <div class="hint">
+      Please mention the methods or tools you are already familiar with or have used in your past work.
+    </div>
+
+    <!-- Question 3 -->
+    <h2>3. Industries or Sectors in the U.S.</h2>
+    <label for="q3">
+      In which U.S. industries or sectors do you intend to apply your work?
+    </label>
+    <textarea
+      id="q3"
+      placeholder="For example: e-commerce, fintech, cloud computing, healthcare AI, labor-market analytics, policy research, etc."
+    ></textarea>
+    <div class="hint">
+      The more specific the better. For example: “recommendation systems team in the e-commerce sector” is more helpful than only “tech company.”
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn-primary" type="button" onclick="sendEmail()">
+        Send to Attorney
+      </button>
+      <button class="btn-secondary" type="button" onclick="previewText()">
+        Preview Text
+      </button>
+    </div>
+
+    <p class="note">
+      “Send to Attorney” will open your email program with the answers filled
+      in. You can review and then click “Send.”
+    </p>
+
+    <!-- Generated preview -->
+    <div id="generatedOutput" class="generated" style="display:none;"></div>
+  </div>
+
+  <script>
+    const ATTORNEY_EMAIL = "askus@junlawfirm.com"; // 변경 가능
+
+    function buildBody() {
+      const name = document.getElementById("clientName").value.trim();
+      const email = document.getElementById("clientEmail").value.trim();
+      const q1 = document.getElementById("q1").value.trim();
+      const q2 = document.getElementById("q2").value.trim();
+      const q3 = document.getElementById("q3").value.trim();
+
+      let body = "";
+      if (name) {
+        body += "Client Name: " + name + "\n";
+      }
+      if (email) {
+        body += "Client Email: " + email + "\n";
+      }
+      if (name || email) {
+        body += "\n";
+      }
+
+      body += "1. Problems to Solve in the U.S.:\n";
+      body += (q1 || "[Client did not enter an answer]") + "\n\n";
+
+      body += "2. Methods / Techniques to Use:\n";
+      body += (q2 || "[Client did not enter an answer]") + "\n\n";
+
+      body += "3. U.S. Industries / Sectors:\n";
+      body += (q3 || "[Client did not enter an answer]") + "\n";
+
+      return body;
+    }
+
+    function sendEmail() {
+      const subject = encodeURIComponent("NIW Future Plan – Questionnaire Answers");
+      const body = encodeURIComponent(buildBody());
+      const mailtoLink = "mailto:" + ATTORNEY_EMAIL + "?subject=" + subject + "&body=" + body;
+      window.location.href = mailtoLink;
+    }
+
+    function previewText() {
+      const body = buildBody();
+      const output = document.getElementById("generatedOutput");
+      output.textContent = body;
+      output.style.display = "block";
+    }
+  </script>
+</body>
+</html>
